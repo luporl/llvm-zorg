@@ -10,7 +10,6 @@ from zorg.buildbot.builders import PollyBuilder
 from zorg.buildbot.builders import LLDBBuilder
 from zorg.buildbot.builders import SanitizerBuilder
 from zorg.buildbot.builders import OpenMPBuilder
-from zorg.buildbot.builders import SphinxDocsBuilder
 from zorg.buildbot.builders import ABITestsuitBuilder
 from zorg.buildbot.builders import ClangLTOBuilder
 from zorg.buildbot.builders import UnifiedTreeBuilder
@@ -32,7 +31,6 @@ reload(PollyBuilder)
 reload(LLDBBuilder)
 reload(SanitizerBuilder)
 reload(OpenMPBuilder)
-reload(SphinxDocsBuilder)
 reload(ABITestsuitBuilder)
 reload(ClangLTOBuilder)
 reload(UnifiedTreeBuilder)
@@ -2161,84 +2159,6 @@ all += [
                         '-DLLVM_PARALLEL_COMPILE_JOBS=4',
                     ])},
 
-# Builders responsible building Sphinx documentation.
-
-    {'name' : "lld-sphinx-docs",
-    'tags'  : ["lld", "doc"],
-    'workernames' : ["gribozavr3"],
-    'builddir': "lld-sphinx-docs",
-    'factory' : SphinxDocsBuilder.getSphinxDocsBuildFactory(lld_html=True)},
-
-    {'name':"libunwind-sphinx-docs",
-    'tags'  : ["libunwind", "doc"],
-    'workernames':["gribozavr3"],
-    'builddir':"libunwind-sphinx-docs",
-    'factory': SphinxDocsBuilder.getSphinxRuntimesDocsBuildFactory(libunwind_html=True)},
-
-    {'name' : "polly-sphinx-docs",
-    'tags'  : ["llvm", "doc"],
-    'workernames' : ["polly-x86_64-gce1"],
-    'builddir': "polly-sphinx-docs",
-    'factory': SphinxDocsBuilder.getSphinxDocsBuildFactory(polly_html=True)},
-
-    # Sphinx doc Publisher
-    {'name' : "publish-sphinx-docs",
-    'tags'  : ["doc"],
-    'workernames' : ["as-worker-4"],
-    'builddir': "publish-sphinx-docs",
-    'factory' : SphinxDocsBuilder.getLLVMDocsBuildFactory(clean=True)},
-
-    {'name' : "publish-runtimes-sphinx-docs",
-    'tags'  : ["doc"],
-    'workernames' : ["as-worker-4"],
-    'builddir': "publish-runtimes-sphinx-docs",
-    'factory' : SphinxDocsBuilder.getLLVMRuntimesDocsBuildFactory(
-                    clean=True,
-                    extra_configure_args=[
-                        "-DLIBCXX_INCLUDE_BENCHMARKS=OFF",
-                    ])},
-
-    {'name' : "publish-lnt-sphinx-docs",
-    'tags'  : ["doc"],
-    'workernames' : ["as-worker-4"],
-    'builddir': "publish-lnt-sphinx-docs",
-    'factory' : HtmlDocsBuilder.getHtmlDocsBuildFactory()},
-
-    {'name' : "publish-doxygen-docs",
-    'tags'  : ["doc"],
-    'workernames' : ["as-worker-4"], #FIXME: Temporarily disabled failing doxygen build - as-builder-8.
-    'builddir': "publish-doxygen-docs",
-    'factory' : DoxygenDocsBuilder.getLLVMDocsBuildFactory(
-                    # Doxygen builds the final result for really
-                    # long time without any output.
-                    # We have to have a long timeout here.
-                    timeout=172800)},
-
-# CUDA builders.
-
-    {'name' : "clang-cuda-k80",
-    'tags'  : ["clang"],
-    'workernames' : ["cuda-k80-0"],
-    'builddir': "clang-cuda-k80",
-    'factory' : AnnotatedBuilder.getAnnotatedBuildFactory(
-                    script="/buildbot/cuda-build",
-                    checkout_llvm_sources=False)},
-
-    {'name' : "clang-cuda-p4",
-    'tags'  : ["clang"],
-    'workernames' : ["cuda-p4-0"],
-    'builddir': "clang-cuda-p4",
-    'factory' : AnnotatedBuilder.getAnnotatedBuildFactory(
-                    script="/buildbot/cuda-build",
-                    checkout_llvm_sources=False)},
-
-    {'name' : "clang-cuda-t4",
-    'tags'  : ["clang"],
-    'workernames' : ["cuda-t4-0"],
-    'builddir': "clang-cuda-t4",
-    'factory' : AnnotatedBuilder.getAnnotatedBuildFactory(
-                    script="/buildbot/cuda-build",
-                    checkout_llvm_sources=False)},
 # HIP builders.
 
     {'name' : "clang-hip-vega20",
