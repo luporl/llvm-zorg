@@ -40,6 +40,14 @@ def get_all():
         create_worker("linaro-g3-03", properties={'jobs' : 32}, max_builds=1),
         create_worker("linaro-g3-04", properties={'jobs' : 32}, max_builds=1),
 
+        ### llworkers ###
+        create_worker("llworker-mac1", properties={'jobs' : 4}, max_builds=1),
+        create_worker("llworker-mac2", properties={'jobs' : 4}, max_builds=1),
+        create_worker("llworker-mac3", properties={'jobs' : 4}, max_builds=1),
+        create_worker("llworker-mac4", properties={'jobs' : 4}, max_builds=1),
+        create_worker("xxworker-mac1", properties={'jobs' : 4}, max_builds=1),
+        create_worker("xxworker-mac2", properties={'jobs' : 4}, max_builds=1),
+
         # AArch64 Windows Microsoft Surface X Pro
         create_worker("linaro-armv8-windows-msvc-01", properties={'jobs' : 8}, max_builds=1),
         create_worker("linaro-armv8-windows-msvc-02", properties={'jobs' : 8}, max_builds=1),

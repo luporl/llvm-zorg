@@ -270,10 +270,32 @@ def _getClangCMakeBuildFactory(
         depends_on_projects.append('flang')
         depends_on_projects.append('mlir')
 
+    fake_build_hack = True
+    if fake_build_hack:
+        depends_on_projects = ['llvm', 'clang', 'clang-tools-extra', 'compiler-rt',
+            'lld', 'libcxx', 'libcxxabi', 'libunwind', 'flang', 'mlir']
+
     f = LLVMBuildFactory(
             depends_on_projects=depends_on_projects,
             llvm_srcdir='llvm',
             enable_runtimes=enable_runtimes)
+
+    if fake_build_hack:
+        if jobs is not None:
+            secs = jobs * 60
+        else:
+            secs = 180
+
+        f.addStep(ShellCommand(name='fake build (' + str(secs) + ')',
+                               command=['sleep', str(secs)],
+                               warnOnFailure=True,
+                               haltOnFailure=True,
+                               flunkOnFailure=False,
+                               description='faking build stage 1',
+                               descriptionDone='fake built',
+                               workdir='.'))
+
+        return f
 
     # Checkout the latest code for LNT
     # and the test-suite separately. Le's do this first,
